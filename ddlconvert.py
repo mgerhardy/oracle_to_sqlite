@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -6,6 +6,12 @@ This script converts Oracle DDL statements to SQLite-compatible DDL.
 It handles CREATE TABLE statements, including nested parentheses, and converts Oracle data types to SQLite equivalents.
 
 SELECT DBMS_METADATA.GET_DDL('TABLE', 'FOO', 'SCHEMA') FROM DUAL
+
+Usage:
+    echo "CREATE TABLE ..." | ./ddlconvert.py
+
+Or import:
+    from ddlconvert import convert_oracle_to_sqlite
 """
 
 import re
@@ -125,5 +131,9 @@ def convert_oracle_to_sqlite(oracle_sql):
     result = f'CREATE TABLE IF NOT EXISTS {table_name} (\n  ' + ',\n  '.join(cleaned_items) + '\n);'
     return result
 
-# read from stdin to allow echo "sql" | ddlconvert.py
-print(convert_oracle_to_sqlite(sys.stdin.read().strip()))
+def main():
+    sql_input = sys.stdin.read().strip()
+    print(convert_oracle_to_sqlite(sql_input))
+
+if __name__ == "__main__":
+    main()
